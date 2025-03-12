@@ -1,0 +1,61 @@
+# Flutter/Dart related files
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+flutter_*.iml
+
+# iOS related files
+ios/Flutter/.last_build_id
+ios/Pods/
+ios/.symlinks/
+ios/Runner.xcworkspace/
+ios/GeneratedPluginRegistrant.h
+ios/GeneratedPluginRegistrant.m
+
+# Android related files
+android/.gradle/
+android/app/debug.keystore
+android/key.properties
+android/app/key.properties
+android/local.properties
+android/**/generated/
+android/.idea/
+
+# Web related files
+web/.dart_tool/
+web/build/
+
+# VS Code settings
+.vscode/
+
+# IntelliJ/Android Studio
+.idea/
+*.iml
+
+# macOS related files
+macos/.symlinks/
+macos/Flutter/ephemeral/
+macos/Flutter/.last_build_id
+
+# Windows related files
+windows/.dart_tool/
+windows/flutter/ephemeral/
+
+# Linux related files
+linux/.dart_tool/
+linux/flutter/ephemeral/
+
+# Firebase related files
+firebase_app_id_file.json
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Miscellaneous
+*.log
+*.lock
+*.DS_Store
+*.swp
+*.swo
+*.swn
