@@ -28,6 +28,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders = [
+            auth0Domain: "trackpak-prod.eu.auth0.com", 
+            auth0Scheme: "com.example.driver_app", 
+            applicationName: 'com.example.driver_app'
+        ]
     }
 
     buildTypes {
