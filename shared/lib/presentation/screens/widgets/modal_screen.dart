@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+
+class ModalScreen extends StatelessWidget {
+  const ModalScreen({
+    super.key,
+    required this.child,
+    required this.title,
+    required this.subtitle,
+    this.leadingIcon,
+  });
+  final Widget child;
+  final String title;
+  final String subtitle;
+  final Widget? leadingIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[200], // Light grey for modal feel
+      body: Column(
+        children: [
+          // Header Section
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xFF0E1C36), // Dark Blue
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  subtitle,
+                  style: const TextStyle(fontSize: 16, color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+
+          // Main Content
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: child,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
