@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ModalScreen extends StatelessWidget {
   const ModalScreen({
@@ -7,21 +8,23 @@ class ModalScreen extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.leadingIcon,
+    this.isLogin = false,
   });
   final Widget child;
   final String title;
   final String subtitle;
   final Widget? leadingIcon;
+  final bool? isLogin;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200], // Light grey for modal feel
+      backgroundColor: const Color(0xFF0E1C36), // Dark Blue
       body: Column(
         children: [
           // Header Section
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
             width: double.infinity,
             decoration: const BoxDecoration(
               color: Color(0xFF0E1C36), // Dark Blue
@@ -32,6 +35,10 @@ class ModalScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
+                SvgPicture.asset(
+                  'packages/shared/assets/icons/trackpak-logo.svg',
+                  width: 200,
+                ),
                 const SizedBox(height: 10),
                 Text(
                   title,

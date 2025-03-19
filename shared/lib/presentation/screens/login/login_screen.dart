@@ -25,6 +25,7 @@ class LoginScreen extends StatelessWidget {
       child: ModalScreen(
         title: 'Welcome!',
         subtitle: 'Sign in to continue',
+        isLogin: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
