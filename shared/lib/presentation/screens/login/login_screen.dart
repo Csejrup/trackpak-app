@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
       listener: (context, state) {
         if (state is LoggedIn) {
           // Navigate to "/home" after login (for both apps)
-          context.goNamed('/home');
+          context.go('/home');
         } else if (state is LoginFailed) {
           // Show error message
           ScaffoldMessenger.of(

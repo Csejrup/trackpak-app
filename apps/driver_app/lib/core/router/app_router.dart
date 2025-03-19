@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:driver_app/presentation/home/home_screen.dart';
+import 'package:driver_app/presentation/route/route_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,8 @@ class AppRouter {
   static GoRouter createRouter(BuildContext context) {
     return GoRouter(
       initialLocation: AppRoutes.splash.path,
+      debugLogDiagnostics: true,
+
       routes: [
         GoRoute(
           path: AppRoutes.splash.path,
@@ -25,12 +28,27 @@ class AppRouter {
         GoRoute(
           path: AppRoutes.home.path,
           builder: (context, state) => const HomeScreen(),
+          routes: [
+            GoRoute(
+              path: '/route-details/:routeName',
+              name: AppRoutes.routeDetails.name,
+              builder:
+                  (context, state) => RouteDetailsScreen(
+                    routeName: state.pathParameters['routeName']!,
+                  ),
+            ),
+          ],
         ),
       ],
       redirect: (BuildContext context, GoRouterState state) {
         final authState = context.read<AuthenticationBloc>().state;
         final isLoggedIn = authState is LoggedIn;
         final isAtLogin = state.matchedLocation == AppRoutes.login.path;
+
+        final path = state.uri.path;
+        if (path.startsWith('/home/route-details')) {
+          return null;
+        }
 
         // If user is NOT logged in, force them to login page
         if (!isLoggedIn) {

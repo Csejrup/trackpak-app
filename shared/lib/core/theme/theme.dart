@@ -12,7 +12,7 @@ class AppTheme {
   static const Color teal = Color(0xFF13B7AF);
   static const Color darkBlue = Color(0xFF1A2135);
 
-  static final ThemeData theme = ThemeData(
+  final ThemeData theme = ThemeData(
     primaryColor: darkBlue,
     scaffoldBackgroundColor: white,
     fontFamily: GoogleFonts.openSans().fontFamily,

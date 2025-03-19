@@ -21,7 +21,7 @@ extension AppRoutesExtension on AppRoutes {
       case AppRoutes.routes:
         return '/routes';
       case AppRoutes.routeDetails:
-        return '/routes/details';
+        return 'home/route-details';
       case AppRoutes.orderDetails:
         return '/orders/details';
       case AppRoutes.profile:
