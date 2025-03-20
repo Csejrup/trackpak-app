@@ -1,4 +1,5 @@
 import 'package:customer_app/core/router/app_router.dart';
+import 'package:customer_app/presentation/blocs/tracking_bloc/tracking_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,8 @@ class CustomerApp extends StatelessWidget {
                 auth0ClientId: 'ogyqHW33x0Npd9yS6vSGqiUOOkCcUje1',
               )..add(AuthInit()),
         ),
+        BlocProvider(create: (context) => TrackingBloc()),
+
         BlocProvider(create: (context) => ApiBloc(apiProvider: ApiProvider())),
 
         ChangeNotifierProvider(

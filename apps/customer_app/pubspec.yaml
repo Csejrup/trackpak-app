@@ -14,6 +14,9 @@ dependencies:
     path: ../../shared
   go_router: ^14.6.2
   flutter_bloc: ^8.1.3
+  geolocator: ^13.0.3
+  web_socket_channel: ^3.0.2
+  flutter_map: ^8.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

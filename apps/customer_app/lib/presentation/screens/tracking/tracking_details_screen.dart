@@ -1,6 +1,10 @@
+import 'package:customer_app/presentation/blocs/tracking_bloc/tracking_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
-class TrackingDetails extends StatelessWidget {
+class TrackingDetails extends StatefulWidget {
   const TrackingDetails({
     super.key,
     required this.orderId,
@@ -13,8 +17,27 @@ class TrackingDetails extends StatelessWidget {
   final int totalOrders;
 
   @override
+  State<TrackingDetails> createState() => _TrackingDetailsState();
+}
+
+class _TrackingDetailsState extends State<TrackingDetails> {
+  late TrackingBloc trackingBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    trackingBloc = context.read<TrackingBloc>();
+  }
+
+  @override
+  void dispose() {
+    trackingBloc.add(StopListening()); // Stop the tracking & WebSocket
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isActiveTracking = positionInQueue <= 8;
+    bool isActiveTracking = widget.positionInQueue <= 8;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
@@ -27,27 +50,18 @@ class TrackingDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _orderInfoSection(),
+            _orderInfoSection(widget.orderId),
             const SizedBox(height: 20),
-            _yourPlaceSection(),
+            _yourPlaceSection(widget.positionInQueue, widget.totalOrders),
             const SizedBox(height: 20),
             isActiveTracking ? _activeMapSection() : _illustrationSection(),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-        ],
-      ),
     );
   }
 
-  Widget _orderInfoSection() {
+  Widget _orderInfoSection(String orderId) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -69,7 +83,7 @@ class TrackingDetails extends StatelessWidget {
     );
   }
 
-  Widget _yourPlaceSection() {
+  Widget _yourPlaceSection(int positionInQueue, int totalOrders) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -90,11 +104,44 @@ class TrackingDetails extends StatelessWidget {
           color: Colors.grey[300],
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Center(
-          child: Text(
-            "🗺 Live Map Tracking Activated",
-            style: TextStyle(fontSize: 16),
-          ),
+        child: BlocBuilder<TrackingBloc, TrackingState>(
+          builder: (context, state) {
+            if (state is TrackingUpdate) {
+              return FlutterMap(
+                options: MapOptions(
+                  initialCenter: LatLng(state.latitude, state.longitude),
+                  initialZoom: 15,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    subdomains: const ['a', 'b', 'c'],
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        width: 50,
+                        height: 50,
+                        point: LatLng(state.latitude, state.longitude),
+                        child: const Icon(
+                          Icons.local_shipping,
+                          size: 40,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            } else if (state is TrackingInProgress) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return const Center(
+                child: Text("Waiting for driver's location..."),
+              );
+            }
+          },
         ),
       ),
     );
