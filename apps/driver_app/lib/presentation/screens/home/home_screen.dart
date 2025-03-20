@@ -1,6 +1,8 @@
 import 'package:driver_app/core/router/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared/presentation/blocs/authentication_bloc/authentication_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,17 +22,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthenticationBloc>().state;
+    String profileImage = '';
+
+    if (authState is LoggedIn && authState.userProfile.pictureUrl != null) {
+      profileImage = authState.userProfile.pictureUrl.toString();
+    }
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 7, 11, 56),
         title: Row(
           children: [
-            /*  const CircleAvatar(
-              backgroundImage: AssetImage(
-                '../../shared/assets/images/placeholder.png',
-              ),
-            ), */
+            CircleAvatar(
+              backgroundImage:
+                  profileImage.isNotEmpty
+                      ? NetworkImage(profileImage)
+                      : const AssetImage(
+                            'assets/images/profile_placeholder.png',
+                          )
+                          as ImageProvider,
+            ),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

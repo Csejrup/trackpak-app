@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:driver_app/presentation/screens/home/home_screen.dart';
-import 'package:driver_app/presentation/screens/route/route_details_screen.dart';
+import 'package:customer_app/presentation/screens/home/home_screen.dart';
+import 'package:customer_app/presentation/screens/tracking/tracking_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -30,11 +30,17 @@ class AppRouter {
           builder: (context, state) => const HomeScreen(),
           routes: [
             GoRoute(
-              path: '/route-details/:routeName',
-              name: AppRoutes.routeDetails.name,
+              path: '/tracking-details/:orderId/:positionInQueue/:totalOrders',
+              name: AppRoutes.trackingDetails.name,
               builder:
-                  (context, state) => RouteDetailsScreen(
-                    routeName: state.pathParameters['routeName']!,
+                  (context, state) => TrackingDetails(
+                    orderId: state.pathParameters['orderId']!,
+                    positionInQueue: int.parse(
+                      state.pathParameters['positionInQueue']!,
+                    ),
+                    totalOrders: int.parse(
+                      state.pathParameters['totalOrders']!,
+                    ),
                   ),
             ),
           ],
@@ -46,7 +52,7 @@ class AppRouter {
         final isAtLogin = state.matchedLocation == AppRoutes.login.path;
 
         final path = state.uri.path;
-        if (path.startsWith('/home/route-details')) {
+        if (path.startsWith('/home/tracking-details')) {
           return null;
         }
 

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.driver_app"
+    namespace = "com.example.driverApp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.driver_app"
+        applicationId = "com.example.driverApp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -30,8 +30,8 @@ android {
         versionName = flutter.versionName
         manifestPlaceholders = [
             auth0Domain: "trackpak-prod.eu.auth0.com", 
-            auth0Scheme: "com.example.driver_app", 
-            applicationName: 'com.example.driver_app'
+            auth0Scheme: "com.example.driverApp", 
+            applicationName: 'com.example.driverApp'
         ]
     }
 

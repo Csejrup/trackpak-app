@@ -9,3 +9,5 @@ class StartTracking extends TrackingEvent {
 }
 
 class StopTracking extends TrackingEvent {}
+
+class ErrorTracking extends TrackingEvent {}
