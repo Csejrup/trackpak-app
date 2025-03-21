@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:auth0_flutter/auth0_flutter.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared/providers/providers.dart';
 
 part 'authentication_event.dart';
@@ -57,7 +59,32 @@ class AuthenticationBloc
 
         if (hasValidCreds) {
           final credentials = await auth0.credentialsManager.credentials();
-          emit(LoggedIn(userProfile: credentials.user));
+          Map<String, dynamic> decodedToken = JwtDecoder.decode(
+            credentials.accessToken,
+          );
+
+          final userId = decodedToken['https://trackpak.com/user_id'];
+          final companyId = decodedToken['https://trackpak.com/company_id'];
+          final employeeId = decodedToken['https://trackpak.com/employee_id'];
+          final token = credentials.accessToken;
+          const chunkSize = 512;
+          for (var i = 0; i < token.length; i += chunkSize) {
+            debugPrint(
+              token.substring(
+                i,
+                i + chunkSize > token.length ? token.length : i + chunkSize,
+              ),
+            );
+          }
+          emit(
+            LoggedIn(
+              userProfile: credentials.user,
+              userId: userId,
+              companyId: companyId,
+              employeeId: employeeId,
+              accessToken: credentials.accessToken,
+            ),
+          );
         } else {
           await secureStorage.deleteKey('access_token');
           emit(LoggedOut());
@@ -72,6 +99,7 @@ class AuthenticationBloc
   }
 
   /// Handles user login flow
+
   Future<void> _handleLogin(Emitter<AuthenticationState> emit) async {
     try {
       final credentials = await auth0.webAuthentication().login(
@@ -83,7 +111,25 @@ class AuthenticationBloc
 
       await secureStorage.writeString('access_token', credentials.accessToken);
       await secureStorage.writeString('id_token', credentials.idToken);
-      emit(LoggedIn(userProfile: credentials.user));
+
+      // Decode access token to fetch custom claims
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(
+        credentials.accessToken,
+      );
+
+      final userId = decodedToken['https://trackpak.com/user_id'];
+      final companyId = decodedToken['https://trackpak.com/company_id'];
+      final employeeId = decodedToken['https://trackpak.com/employee_id'];
+
+      emit(
+        LoggedIn(
+          userProfile: credentials.user,
+          userId: userId,
+          companyId: companyId,
+          employeeId: employeeId,
+          accessToken: credentials.accessToken,
+        ),
+      );
     } catch (e) {
       emit(LoginFailed(message: 'Login failed: ${e.toString()}'));
     }

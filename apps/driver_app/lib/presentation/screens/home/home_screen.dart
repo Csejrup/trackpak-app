@@ -56,8 +56,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        actions: const [Icon(Icons.help_outline)],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            tooltip: 'Logout',
+            onPressed: () {
+              context.read<AuthenticationBloc>().add(LogOut());
+              context.go(
+                AppRoutes.login.path,
+              ); // Redirect to login after logout
+            },
+          ),
+        ],
       ),
+
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [

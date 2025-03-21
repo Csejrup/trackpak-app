@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/io.dart';
 
 part 'tracking_event.dart';
 part 'tracking_state.dart';
 
 class TrackingBloc extends Bloc<TrackingEvent, TrackingState> {
-  WebSocketChannel? _channel;
+  IOWebSocketChannel? _channel;
   StreamSubscription<Position>? _positionSubscription;
 
   TrackingBloc() : super(TrackingInitial()) {
@@ -21,17 +21,18 @@ class TrackingBloc extends Bloc<TrackingEvent, TrackingState> {
     Emitter<TrackingState> emit,
   ) async {
     try {
-      // 🔗 Connect to your backend websocket
-      _channel = WebSocketChannel.connect(Uri.parse(event.wsUrl));
+      _channel = IOWebSocketChannel.connect(
+        Uri.parse(event.wsUrl),
+        headers: {'Authorization': 'Bearer ${event.accessToken}'},
+      );
       emit(TrackingInProgress());
 
-      // 🛰 Start GPS stream
       _positionSubscription = Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
           distanceFilter: 50,
         ),
-      ).listen((Position position) {
+      ).listen((position) {
         final trackingData = {
           'driverId': event.driverId,
           'latitude': position.latitude,
@@ -39,7 +40,6 @@ class TrackingBloc extends Bloc<TrackingEvent, TrackingState> {
           'timestamp': DateTime.now().toIso8601String(),
         };
 
-        // 🚀 Send location to backend
         _channel?.sink.add(jsonEncode(trackingData));
       });
     } catch (e) {

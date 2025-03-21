@@ -1,6 +1,7 @@
 import 'package:driver_app/presentation/blocs/tracking_bloc/tracking_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared/presentation/blocs/authentication_bloc/authentication_bloc.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   const RouteDetailsScreen({super.key, required this.routeName});
@@ -13,16 +14,22 @@ class RouteDetailsScreen extends StatefulWidget {
 class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
   bool hasStarted = false;
 
-  final List<String> orders = [
-    "Order #1 - Jysk.dk",
-    "Order #2 - YouSee",
-    "Order #3 - Coolshop.dk",
-    "Order #4 - Elgiganten.dk",
-    "Order #5 - Murermester Salting",
+  final List<Map<String, String>> orders = [
+    {
+      "orderName": "Order #1 - Jysk.dk",
+      "userId": "409a2b0c-0bfa-459c-b782-82a914bec178",
+    },
+    {
+      "orderName": "Order #2 - YouSee",
+      "userId": "409a2b0c-0bfa-459c-b782-82a914bec179",
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthenticationBloc>().state;
+    final employeeId = authState is LoggedIn ? authState.employeeId : null;
+    final accessToken = authState is LoggedIn ? authState.accessToken : null;
     return BlocProvider(
       create: (_) => TrackingBloc(),
       child: Scaffold(
@@ -49,7 +56,7 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
               padding: const EdgeInsets.all(16),
               children: [
                 const Text(
-                  "Top 5 Orders",
+                  "Top Orders",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
@@ -57,7 +64,7 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
                   (order) => Card(
                     child: ListTile(
                       leading: const Icon(Icons.local_shipping),
-                      title: Text(order),
+                      title: Text(order['orderName']!),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     ),
                   ),
@@ -92,14 +99,27 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
                       style: TextStyle(fontSize: 16),
                     ),
                     onPressed: () {
+                      if (employeeId == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Employee ID missing")),
+                        );
+                        return;
+                      }
+
+                      // Example: Grabbing userId from the first order (customize logic as needed)
+                      final userId = orders.first['userId'];
+
                       setState(() {
                         hasStarted = true;
                       });
-                      // ✅ Trigger tracking
+
+                      // ✅ Trigger tracking with employeeId and userId
                       context.read<TrackingBloc>().add(
                         StartTracking(
-                          driverId: "driver-1234",
-                          wsUrl: "wss://your-backend-endpoint/ws/tracking",
+                          driverId: employeeId,
+                          wsUrl:
+                              "ws://localhost:5056/tracking/ws?employeeId=$employeeId&userId=$userId",
+                          accessToken: accessToken!,
                         ),
                       );
                     },
@@ -127,15 +147,6 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
               ],
             );
           },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.black,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-            BottomNavigationBarItem(icon: Icon(Icons.map), label: ''),
-            BottomNavigationBarItem(icon: Icon(Icons.history), label: ''),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
-          ],
         ),
       ),
     );
