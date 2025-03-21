@@ -1,4 +1,6 @@
 import 'package:customer_app/core/router/app_router.dart';
+import 'package:customer_app/data/repositories/order_repository.dart';
+import 'package:customer_app/presentation/blocs/order_bloc/order_bloc.dart';
 import 'package:customer_app/presentation/blocs/tracking_bloc/tracking_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,9 +30,12 @@ class CustomerApp extends StatelessWidget {
               )..add(AuthInit()),
         ),
         BlocProvider(create: (context) => TrackingBloc()),
-
         BlocProvider(create: (context) => ApiBloc(apiProvider: ApiProvider())),
-
+        BlocProvider(
+          create:
+              (context) =>
+                  OrderBloc(OrderRepository(ApiProvider()))..add(FetchOrders()),
+        ),
         ChangeNotifierProvider(
           create: (context) => GoRouterRefreshStream(context),
         ),

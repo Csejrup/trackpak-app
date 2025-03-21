@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:auth0_flutter/auth0_flutter.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared/providers/providers.dart';
 
 part 'authentication_event.dart';
@@ -59,23 +57,15 @@ class AuthenticationBloc
 
         if (hasValidCreds) {
           final credentials = await auth0.credentialsManager.credentials();
-          Map<String, dynamic> decodedToken = JwtDecoder.decode(
-            credentials.accessToken,
-          );
+          final userProfile = credentials.user;
 
-          final userId = decodedToken['https://trackpak.com/user_id'];
-          final companyId = decodedToken['https://trackpak.com/company_id'];
-          final employeeId = decodedToken['https://trackpak.com/employee_id'];
-          final token = credentials.accessToken;
-          const chunkSize = 512;
-          for (var i = 0; i < token.length; i += chunkSize) {
-            debugPrint(
-              token.substring(
-                i,
-                i + chunkSize > token.length ? token.length : i + chunkSize,
-              ),
-            );
-          }
+          final userId =
+              userProfile.customClaims?['https://trackpak.com/user_id'];
+          final companyId =
+              userProfile.customClaims?['https://trackpak.com/company_id'];
+          final employeeId =
+              userProfile.customClaims?['https://trackpak.com/employee_id'];
+
           emit(
             LoggedIn(
               userProfile: credentials.user,
@@ -112,14 +102,13 @@ class AuthenticationBloc
       await secureStorage.writeString('access_token', credentials.accessToken);
       await secureStorage.writeString('id_token', credentials.idToken);
 
-      // Decode access token to fetch custom claims
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(
-        credentials.accessToken,
-      );
+      final userProfile = credentials.user;
 
-      final userId = decodedToken['https://trackpak.com/user_id'];
-      final companyId = decodedToken['https://trackpak.com/company_id'];
-      final employeeId = decodedToken['https://trackpak.com/employee_id'];
+      final userId = userProfile.customClaims?['https://trackpak.com/user_id'];
+      final companyId =
+          userProfile.customClaims?['https://trackpak.com/company_id'];
+      final employeeId =
+          userProfile.customClaims?['https://trackpak.com/employee_id'];
 
       emit(
         LoggedIn(

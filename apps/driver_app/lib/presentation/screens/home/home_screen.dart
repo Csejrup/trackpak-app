@@ -62,9 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Logout',
             onPressed: () {
               context.read<AuthenticationBloc>().add(LogOut());
-              context.go(
-                AppRoutes.login.path,
-              ); // Redirect to login after logout
+              context.go(AppRoutes.login.path);
             },
           ),
         ],

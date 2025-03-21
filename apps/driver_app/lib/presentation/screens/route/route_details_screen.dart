@@ -30,6 +30,7 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
     final authState = context.watch<AuthenticationBloc>().state;
     final employeeId = authState is LoggedIn ? authState.employeeId : null;
     final accessToken = authState is LoggedIn ? authState.accessToken : null;
+    print(employeeId);
     return BlocProvider(
       create: (_) => TrackingBloc(),
       child: Scaffold(
@@ -118,11 +119,11 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
                         StartTracking(
                           driverId: employeeId,
                           wsUrl:
-                              "ws://localhost:5056/tracking/ws?employeeId=$employeeId&userId=$userId",
+                              "wss://mongrel-active-completely.ngrok-free.app/api/tracking/ws?employeeId=$employeeId&userId=$userId",
                           accessToken: accessToken!,
                         ),
                       );
-                    },
+                    }, //       "wss://mongrel-active-completely.ngrok-free.app/api/tracking/ws?employeeId=$employeeId&userId=$userId",
                   )
                 else
                   Container(
