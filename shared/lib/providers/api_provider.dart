@@ -12,8 +12,7 @@ class ApiProvider {
   ApiProvider() {
     _dio = Dio(
       BaseOptions(
-        //baseUrl: "https://mongrel-active-completely.ngrok-free.app/api/",
-        baseUrl: "http://localhost:5056/api/",
+        baseUrl: "https://mongrel-active-completely.ngrok-free.app/api/",
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         contentType: 'application/json',

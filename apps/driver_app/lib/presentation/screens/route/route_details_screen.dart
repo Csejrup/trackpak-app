@@ -24,6 +24,11 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
       "userId": "409a2b0c-0bfa-459c-b782-82a914bec179",
     },
   ];
+  @override
+  void dispose() {
+    context.read<TrackingBloc>().add(StopTracking()); // Send stop event
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +111,6 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
                         );
                         return;
                       }
-
-                      // Example: Grabbing userId from the first order (customize logic as needed)
-                      final userId = orders.first['userId'];
-
                       setState(() {
                         hasStarted = true;
                       });
@@ -119,7 +120,7 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
                         StartTracking(
                           driverId: employeeId,
                           wsUrl:
-                              "wss://mongrel-active-completely.ngrok-free.app/api/tracking/ws?employeeId=$employeeId&userId=$userId",
+                              "wss://mongrel-active-completely.ngrok-free.app/api/tracking/ws?employeeId=$employeeId",
                           accessToken: accessToken!,
                         ),
                       );
