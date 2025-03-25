@@ -1,4 +1,4 @@
-import 'package:customer_app/domain/entities/order.dart';
+import 'package:driver_app/data/entities/order.dart';
 import 'package:shared/providers/providers.dart';
 
 class OrderRepository {

@@ -2,14 +2,12 @@ class Order {
   final String id;
   final OrderStatus status;
   final OrderType type;
-  final String? employeeId;
   final String? description;
 
   Order({
     required this.id,
     required this.status,
     required this.type,
-    this.employeeId,
     this.description,
   });
 
@@ -18,7 +16,6 @@ class Order {
       id: json['id'] as String,
       status: OrderStatus.fromString(json['status'] as String),
       type: OrderType.fromString(json['type'] as String),
-      employeeId: json['employeeId'] as String?,
       description: json['description'] as String?,
     );
   }

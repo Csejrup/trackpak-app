@@ -43,8 +43,15 @@ class HomeScreen extends StatelessWidget {
               context.read<OrderBloc>().add(FetchOrders());
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () {
+              context.read<AuthenticationBloc>().add(LogOut());
+            },
+          ),
         ],
       ),
+
       body: BlocBuilder<OrderBloc, OrderState>(
         builder: (context, state) {
           if (state is OrderLoading) {
@@ -60,8 +67,7 @@ class HomeScreen extends StatelessWidget {
                 return Card(
                   child: ListTile(
                     leading: const Icon(Icons.local_shipping),
-                    title: Text(order.title),
-                    subtitle: Text("Carrier: ${order.carrier}"),
+                    title: Text('Order'),
                     trailing: Text(
                       order.status.name,
                       style: const TextStyle(fontWeight: FontWeight.bold),
