@@ -29,9 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
       profileImage = authState.userProfile.pictureUrl.toString();
     }
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F4F4),
+      backgroundColor: const Color(0xFF070B38),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 7, 11, 56),
+        backgroundColor: const Color(0xFF070B38),
         title: Row(
           children: [
             CircleAvatar(
@@ -47,7 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
-                Text('Available Routes', style: TextStyle(fontSize: 18)),
+                Text(
+                  'Available Routes',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
                 Text(
                   'Driver Dashboard',
                   style: TextStyle(fontSize: 12, color: Colors.grey),
@@ -68,39 +71,49 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
 
-      body: ListView(
-        padding: const EdgeInsets.all(12),
-        children: [
-          const SectionTitle(title: 'Routes to Assign'),
-          ...List.generate(availableRoutes.length, (index) {
-            return Card(
-              child: ListTile(
-                leading: const Icon(Icons.route, color: Colors.blue),
-                title: Text(availableRoutes[index]),
-                trailing: Radio<int>(
-                  value: index,
-                  groupValue: _selectedRouteIndex,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedRouteIndex = value;
-                    });
-                  },
+      body: Container(
+        margin: EdgeInsets.only(top: 16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(25),
+            topLeft: Radius.circular(25),
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            const SectionTitle(title: 'Routes to Assign'),
+            ...List.generate(availableRoutes.length, (index) {
+              return Card(
+                child: ListTile(
+                  leading: const Icon(Icons.route, color: Colors.blue),
+                  title: Text(availableRoutes[index]),
+                  trailing: Radio<int>(
+                    value: index,
+                    groupValue: _selectedRouteIndex,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedRouteIndex = value;
+                      });
+                    },
+                  ),
                 ),
+              );
+            }),
+            const SizedBox(height: 20),
+            if (_selectedRouteIndex != null)
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[700],
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                onPressed: () => _assignRoute(context),
+                icon: const Icon(Icons.assignment_ind),
+                label: const Text("Assign Route to Me"),
               ),
-            );
-          }),
-          const SizedBox(height: 20),
-          if (_selectedRouteIndex != null)
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[700],
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              onPressed: () => _assignRoute(context),
-              icon: const Icon(Icons.assignment_ind),
-              label: const Text("Assign Route to Me"),
-            ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.black,

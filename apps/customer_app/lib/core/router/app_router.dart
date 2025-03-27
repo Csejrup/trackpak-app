@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:customer_app/presentation/screens/home/home_screen.dart';
+import 'package:customer_app/presentation/screens/navigation/main_navigation_screen.dart';
 import 'package:customer_app/presentation/screens/tracking/tracking_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +27,7 @@ class AppRouter {
         ),
         GoRoute(
           path: AppRoutes.home.path,
-          builder: (context, state) => const HomeScreen(),
+          builder: (context, state) => const MainNavigationScreen(),
           routes: [
             GoRoute(
               path: '/tracking-details/:orderId/:positionInQueue/:totalOrders',
