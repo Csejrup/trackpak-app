@@ -1,6 +1,6 @@
-# 🚀 TrackPak Mobile Apps (Customer & Driver)
+# TrackPak Mobile Apps (Customer & Driver)
 
-Welcome to the **TrackPak Mobile Apps Monorepo**! This setup contains both the **Customer App** and **Driver App**, with a shared Dart package used for common logic, models, and UI components.
+This is the **TrackPak Mobile Apps Monorepo**! This setup contains both the **Customer App** and **Driver App**, with a shared Dart package used for common logic, models, and UI components.
 
 ---
 
@@ -24,32 +24,18 @@ Before you begin, ensure you have the following installed:
 - Flutter SDK (version 3.13.0+ recommended)
 - Dart SDK
 - Android Studio or Xcode (for Android/iOS builds)
-- `melos` (for managing monorepo — optional but recommended)
 
-Install `melos` globally:
-
-```bash
-dart pub global activate melos
-```
-
----
 
 ## 🚀 Getting Started
 
 ### 1. Clone the repo
 
 ```bash
-git clone <your-repo-url>
-cd trackpak-monorepo
+git clone [Repo link](https://github.com/Csejrup/trackpak-app.git)
+cd trackpak-app
 ```
 
-### 2. Bootstrap all packages (if using `melos`)
-
-```bash
-melos bootstrap
-```
-
-### 3. Install dependencies manually (if not using melos)
+### 2. Install dependencies
 
 ```bash
 cd shared && flutter pub get
@@ -57,7 +43,7 @@ cd ../apps/customer_app && flutter pub get
 cd ../driver_app && flutter pub get
 ```
 
-### 4. Run the apps
+### 3. Run the apps
 
 #### Customer App:
 
@@ -81,36 +67,3 @@ Both apps depend on the `shared/` package. Any changes made here (e.g. models, B
 
 Make sure to re-run `flutter pub get` in each app after updating shared code.
 
----
-
-## 🧪 Testing
-
-You can write unit and widget tests in each project by running:
-
-```bash
-flutter test
-```
-
----
-
-## 👥 Auth0 Integration
-
-Both apps rely on Auth0 for authentication. Credentials and domain config should be placed in a secure `.env` or injected via secrets/config.
-
----
-
-## 📦 Additional Tips
-
-- You can alias each app in VS Code/Android Studio for quick switching.
-- Use `melos run` scripts to automate repetitive dev tasks across apps.
-
----
-
-## 👨‍💻 Maintainers
-
-- @capacit (backend & architecture)
-- @yourname (mobile lead)
-
----
-
-Happy Building! ⚡
